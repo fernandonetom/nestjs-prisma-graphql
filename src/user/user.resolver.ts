@@ -43,4 +43,15 @@ export class UserResolver {
 
     return this.userService.updateUser(id, data);
   }
+
+  @Mutation(() => Boolean)
+  async deleteUser(@Args('id') id: string): Promise<boolean> {
+    const user = await this.userService.findUserById(id);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return this.userService.deleteUser(id);
+  }
 }

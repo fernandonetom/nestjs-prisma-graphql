@@ -28,4 +28,12 @@ export class UserService {
       data,
     });
   }
+
+  async deleteUser(id: string): Promise<boolean> {
+    const deleted = await this.prisma.user.delete({
+      where: { id: Number(id) },
+    });
+
+    return Boolean(deleted);
+  }
 }

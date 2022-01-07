@@ -1,6 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateUserInput } from './dto/create-user.dto';
+import { UpdateUserInput } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -27,5 +28,19 @@ export class UserResolver {
   @Mutation(() => User)
   createUser(@Args('data') data: CreateUserInput): Promise<User> {
     return this.userService.createUser(data);
+  }
+
+  @Mutation(() => User)
+  async updateUser(
+    @Args('id') id: string,
+    @Args('data') data: UpdateUserInput,
+  ): Promise<User> {
+    const user = await this.userService.findUserById(id);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return this.userService.updateUser(id, data);
   }
 }
